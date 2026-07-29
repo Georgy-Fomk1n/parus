@@ -1,14 +1,14 @@
 import { BRANCHES, CONTACTS } from '../data/site.js';
 import YandexMap from '../components/YandexMap.jsx';
 
-/* «Наши филиалы» (п. 7.4 ТЗ): интерактивная карта с двумя метками,
+/* «Наши адреса» (п. 7.4 ТЗ): интерактивная карта с двумя метками,
    адреса с ориентирами и часы работы. На мобильных адреса под картой,
    на десктопе — рядом с картой. */
 export default function BranchesBlock() {
     return (
         <section id="branches" className="section" style={{ background: 'var(--paper)' }}>
             <div className="shell">
-                <span className="mono-caption">Наши филиалы</span>
+                <span className="mono-caption">Наши адреса</span>
                 <h2 className="serif-h2" style={{ margin: '16px 0 0' }}>
                     Две площадки в Западном Дегунино
                 </h2>
@@ -19,7 +19,7 @@ export default function BranchesBlock() {
 
                 <div className="parus-branch-grid">
                     <div className="parus-branch-map">
-                        <YandexMap minHeight={280} label="Карта: филиалы клуба «Парус» в Западном Дегунино" />
+                        <YandexMap minHeight={280} label="Карта: адреса клуба «Парус» в Западном Дегунино" />
                     </div>
 
                     <ol className="parus-branch-list">

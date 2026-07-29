@@ -37,17 +37,19 @@ export default function Hero() {
                 </p>
 
                 <h1 className="parus-hero-title">
-                    Кружки и секции для детей <em>от 1 года до 17 лет</em> в Западном Дегунино
+                    Кружки, секции и мероприятия <br />
+                    для детей и взрослых <br />
+                    <em>в Западном Дегунино</em>
                 </h1>
 
                 <p className="parus-hero-lead">
-                    Некоммерческий клуб «Парус» работает с 2010 года. Двенадцать направлений, педагоги со стажем 15+ лет,
-                    группы до восьми детей. Первое занятие — бесплатно.
+                    <strong>Более 15 лет </strong> помогаем детям и взрослым раскрывать таланты, развиваться, 
+                    заниматься творчеством и спортом в атмосфере доверия и уважения в нашем районе
                 </p>
 
                 {/* Крупные бейджи возрастов → отфильтрованный каталог */}
                 <div className="parus-hero-badges">
-                    <span className="parus-hero-badges-label">Выберите возраст ребёнка:</span>
+                    <span className="parus-hero-badges-label">Выберите направление:</span>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                         {AGE_GROUPS.map((g) => (
                             <AgeBadge key={g.v} label={g.label} caption={g.caption} size="lg" to={`/studios?age=${g.v}`} />
@@ -56,7 +58,8 @@ export default function Hero() {
                 </div>
 
                 {/* Приоритетный CTA — звонок. Вторичный — мессенджер */}
-                <div className="parus-hero-cta">
+                
+                {/*  }<div className="parus-hero-cta">
                     <a href={CONTACTS.phoneHref} className="btn-solid -coral parus-hero-call">
                         <i className="ph-fill ph-phone" aria-hidden="true" style={{ fontSize: 20 }}></i>
                         Позвонить: {CONTACTS.phone}
@@ -66,12 +69,13 @@ export default function Hero() {
                         Написать в WhatsApp
                     </a>
                 </div>
+                */}
 
                 {/* Упоминание двух филиалов */}
                 <ul className="parus-hero-branches">
                     {BRANCHES.map((b) => (
                         <li key={b.n}>
-                            <span>Филиал {b.n}</span>
+                            <span>Адрес {b.n}</span>
                             {b.title}
                         </li>
                     ))}

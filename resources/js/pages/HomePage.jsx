@@ -16,9 +16,9 @@ export default function HomePage() {
     return (
         <>
             <Hero />
-            <PopularClubs />
-            <EventsTeaser />
             <FeaturesRow />
+            <EventsTeaser />
+            <PopularClubs />
             <ContactTeaser />
         </>
     );

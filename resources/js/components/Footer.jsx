@@ -82,12 +82,12 @@ export default function Footer() {
 
                     {/* Адреса двух филиалов */}
                     <div>
-                        <FooterTitle>Филиалы</FooterTitle>
+                        <FooterTitle>Адреса</FooterTitle>
                         <ol style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 16 }}>
                             {BRANCHES.map((b) => (
                                 <li key={b.n} style={{ font: '400 14.5px/1.5 var(--font-sans)', color: 'rgba(var(--cream-rgb),.8)' }}>
                                     <span style={{ display: 'block', font: '500 11px/1 var(--font-mono)', letterSpacing: '.08em', color: 'var(--sun-soft)', marginBottom: 6 }}>
-                                        ФИЛИАЛ {b.n}
+                                        АДРЕС {b.n}
                                     </span>
                                     {b.title}
                                     <span style={{ display: 'block', color: 'rgba(var(--cream-rgb),.5)' }}>{b.city}</span>

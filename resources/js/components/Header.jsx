@@ -85,16 +85,14 @@ export default function Header() {
                             </a>
                         </span>
 
-                        {/* Крупный жирный номер — десктоп */}
-                        <a href={CONTACTS.phoneHref} className="parus-header-phone">
-                            {CONTACTS.phone}
-                            <span>{CONTACTS.hoursShort}</span>
-                        </a>
 
                         {/* Приоритетный CTA. На мобильной сжимается до крупной иконки телефона */}
                         <a href={CONTACTS.phoneHref} className="btn-solid -coral parus-call-btn" aria-label="Позвонить в клуб">
-                            <i className="ph-fill ph-phone" aria-hidden="true" style={{ fontSize: 20 }}></i>
-                            <span className="parus-call-label">Позвонить</span>
+                            <i className="ph-fill ph-phone" aria-hidden="true" style={{ fontSize: 16 }}></i>
+                            <a href={CONTACTS.phoneHref} className="parus-header-phone">
+                            {CONTACTS.phone}
+                            <span className="parus-call-label" >{CONTACTS.hoursShort}</span>
+                        </a>
                         </a>
 
                         <button
@@ -152,7 +150,7 @@ export default function Header() {
                         </div>
 
                         <p style={{ margin: '24px 0 0', font: '400 14px/1.5 var(--font-sans)', color: 'var(--tx-soft)' }}>
-                            {CONTACTS.hours} · Западное Дегунино, два филиала
+                            {CONTACTS.hours} · Западное Дегунино, два адреса
                         </p>
                     </div>
                 )}
@@ -182,20 +180,23 @@ export default function Header() {
                     align-items: center;
                     gap: 16px;
                 }
+                .parus-header-actions > * {
+                    height: 48px;
+                }
                 .parus-header-msg { display: flex; gap: 8px; }
                 .parus-header-phone {
                     display: flex;
                     flex-direction: column;
                     gap: 2px;
-                    color: var(--ink);
+                    color: var(--paper);
                     text-decoration: none;
                     font: 700 19px/1.1 var(--font-sans);
                     letter-spacing: -0.01em;
                     white-space: nowrap;
                 }
                 .parus-header-phone span {
-                    font: 400 11.5px/1 var(--font-sans);
-                    color: var(--tx-soft);
+                    font: 600 10px/1 var(--font-sans);
+                    color: var(--mist);
                 }
                 .parus-header-phone:hover { color: var(--accent); }
                 .parus-burger {

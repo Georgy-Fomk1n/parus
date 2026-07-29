@@ -8,7 +8,7 @@ import DocsTabs from '../sections/DocsTabs.jsx';
 import RequisitesBlock from '../sections/RequisitesBlock.jsx';
 
 /* Страница «О Клубе» (п. 7.4 ТЗ):
-   заголовок → о нас → директор → филиалы и карта → контакты →
+   заголовок → о нас → директор → адреса и карта → контакты →
    документы (табы + аккордеон) → реквизиты. */
 export default function AboutPage() {
     useEffect(() => {

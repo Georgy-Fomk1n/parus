@@ -18,10 +18,10 @@ export default function PopularClubs() {
                     <div>
                         <span className="mono-caption">Кружки и секции</span>
                         <h2 className="serif-h2" style={{ margin: '16px 0 0' }}>
-                            Популярные направления сезона
+                            Популярные направления
                         </h2>
                         <p style={{ margin: '16px 0 0', maxWidth: '48ch', font: '400 16px/1.6 var(--font-sans)', color: 'var(--tx-soft)' }}>
-                            Шесть кружков, куда записываются чаще всего. В карточке сразу видно возраст и стоимость — без перехода на прайс-лист.
+                            Начните знакомство с самыми востребованными кружками и секциями клуба.
                         </p>
                     </div>
                     <Link to="/studios" className="btn-line parus-sec-head-btn">

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 const MAP_SRC =
-    'https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3A7d3808db57c481fb4c66912c045fb6658372fd36804018dd5159b05617b8c8fd&width=612&height=521&lang=ru_RU&scroll=true';
+    'https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3A810bda1043d71187ff3fb8032e30a58890d90a52e065916a60165797547ea0fc&amp;width=612&amp;height=521&amp;lang=ru_RU&amp;scroll=true"';
 
 /* Интерактивная карта с метками двух филиалов.
    Пока конструктор грузится, показываем скелетон; если скрипт не

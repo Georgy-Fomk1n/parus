@@ -19,6 +19,11 @@ export default function Logo({ small = false, showSubtitle = true, invert = fals
                 }}
             />
             <span style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', lineHeight: 1 }}>
+                {showSubtitle && (
+                <span style={{ font: "500 9.5px/1 var(--font-mono)", letterSpacing: '0.14em', textTransform: 'uppercase', color: sub, marginTop: 6 }}>
+                    Досугово-спортивный клуб
+                </span>
+                )}
                 <span
                     style={{
                         font: `500 22px/1 var(--font-serif)`,
@@ -29,11 +34,6 @@ export default function Logo({ small = false, showSubtitle = true, invert = fals
                 >
                     Парус
                 </span>
-                {showSubtitle && (
-                    <span style={{ font: "500 9.5px/1 var(--font-mono)", letterSpacing: '0.14em', textTransform: 'uppercase', color: sub, marginTop: 6 }}>
-                        детский клуб · САО
-                    </span>
-                )}
             </span>
         </span>
     );
