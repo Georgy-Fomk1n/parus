@@ -1,0 +1,1428 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+:root {
+    /* Фон: холодный светло-прохладный, не бежевый */
+    --paper: #eef1f4;
+    --paper-2: #f4f6f8;
+    --paper-3: #fafbfc;
+    --mist: #dfe4ea;
+
+    /* Ink: синий флот (брендовый Парус) */
+    --ink: #163b64;
+    --ink-2: #0f2d4e;
+    --ink-soft: #26517e;
+
+    /* Акцент: красный (охристый), редко и точечно */
+    --accent: #c8462e;
+    --accent-2: #a83a24;
+
+    /* Солнце: жёлтый — «свет/выделение», не «действие» */
+    --sun: #f2b63a;
+    --sun-deep: #e0a24a;
+    --sun-soft: #f2c78a;
+    --sun-wash: rgba(242, 182, 58, 0.16);
+    --accent-hi: var(--sun-deep);
+
+    /* Небо: голубой фон секций, чередуется с paper */
+    --sky: #dbeaf5;
+    --sky-2: #e7f1f8;
+    --sky-deep: #c7ddee;
+
+    /* Тёмные поверхности и текст на тёмном */
+    --ink-deep: #08192d;
+    --cream-rgb: 244, 237, 224;
+
+    /* Текст */
+    --tx: #1b2b3f;
+    --tx-soft: #4d5e73;
+    --tx-mute: #7a8797;
+
+    /* Линии */
+    --line: rgba(22, 59, 100, 0.16);
+    --line-strong: rgba(22, 59, 100, 0.32);
+
+    /* Шрифтовые стеки: обе гарнитуры сделаны под кириллицу */
+    --font-sans: 'Golos Text', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-serif: 'PT Serif', 'Times New Roman', Georgia, serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+    /* 8-пиксельная сетка (п. 3 ТЗ): все отступы кратны 8 */
+    --s1: 8px;
+    --s2: 16px;
+    --s3: 24px;
+    --s4: 32px;
+    --s5: 40px;
+    --s6: 48px;
+    --s7: 64px;
+    --s8: 80px;
+    --s9: 96px;
+    --s10: 128px;
+
+    /* Вертикальный ритм секций: мобильная база → десктоп */
+    --section-y: clamp(48px, 7vw, 96px);
+    --gutter: clamp(16px, 5vw, 64px);
+    --shell: 1280px;
+
+    /* Семантика статусов (наличие мест, состояния полей) */
+    --ok: #2f7d4f;
+    --ok-wash: rgba(47, 125, 79, 0.1);
+    --warn: #b5741a;
+    --warn-wash: rgba(181, 116, 26, 0.12);
+    --err: #c8462e;
+    --err-wash: rgba(200, 70, 46, 0.09);
+    --disabled-tx: #9aa5b1;
+    --disabled-bg: #e3e7ec;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: var(--paper);
+    color: var(--tx);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+::selection {
+    background: var(--ink);
+    color: var(--paper);
+}
+
+[class^="ph-"],
+[class*=" ph-"] {
+    line-height: 1;
+}
+
+button {
+    font-family: inherit;
+}
+
+a {
+    color: inherit;
+}
+
+/* Логотип-инверсия: PNG у нас белый (gray+alpha).
+   На светлом фоне превращаем в синий-чернильный.
+   На тёмном фоне (data-invert="1") оставляем светлым. */
+.parus-logo-img {
+    filter: invert(19%) sepia(38%) saturate(1197%) hue-rotate(178deg) brightness(93%) contrast(96%);
+}
+
+.parus-logo-img[data-invert="1"] {
+    filter: none;
+}
+
+/* Хайрлайн */
+.hairline {
+    display: block;
+    height: 1px;
+    background: var(--line);
+}
+
+/* Фото: живая нейтральная цветопередача (была десатурация) */
+.photo {
+    filter: saturate(1.04) contrast(1.01);
+    transition: transform 0.55s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.3s ease;
+}
+
+.parus-photo-frame::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    border-top: 5px solid var(--sun);
+    border-left: 5px solid var(--sun);
+    clip-path: polygon(0 0, 72px 0, 72px 5px, 5px 5px, 5px 72px, 0 72px);
+}
+
+.parus-photo-frame::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    width: 58px;
+    height: 58px;
+    pointer-events: none;
+    border-right: 3px solid var(--accent);
+    border-bottom: 3px solid var(--accent);
+    opacity: 0.9;
+}
+
+.parus-photo-frame:hover .photo {
+    transform: scale(1.018);
+    filter: saturate(1.08) contrast(1.015);
+}
+
+.parus-photo-index {
+    position: absolute;
+    right: 14px;
+    bottom: 12px;
+    z-index: 3;
+    padding: 5px 7px;
+    background: rgba(8, 25, 45, 0.76);
+    color: #fff;
+    font: 500 10px/1 var(--font-mono);
+    letter-spacing: 0.08em;
+}
+
+.parus-photo-caption {
+    display: grid;
+    grid-template-columns: minmax(120px, 0.35fr) minmax(0, 1fr);
+    gap: clamp(16px, 3vw, 40px);
+    padding: 13px 0 0;
+    color: var(--tx-soft);
+    font: 400 12.5px/1.45 var(--font-sans);
+}
+
+.parus-photo-caption > span:first-child {
+    color: var(--ink);
+    font: 500 10.5px/1.35 var(--font-mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.parus-preview-outro {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 24px;
+    margin-top: clamp(24px, 3vw, 38px);
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+}
+
+.parus-nautical-mark {
+    object-fit: contain;
+}
+
+.parus-page-compass {
+    transform: rotate(8deg);
+}
+
+/* Декоративная партитура главной: один смысловой мотив на секцию.
+   Гравюры остаются за контентом и никогда не принимают события мыши. */
+.parus-header-flags,
+.parus-about-shell,
+.parus-tracks-activities,
+.parus-team-flags,
+.parus-gallery-paperboat,
+.parus-news-beacon,
+.parus-docs-seal,
+.parus-cta-lifebuoy,
+.parus-footer-harbor {
+    position: absolute;
+    pointer-events: none;
+    user-select: none;
+}
+
+.parus-header-flags {
+    z-index: 0;
+    top: -6px;
+    right: clamp(220px, 18vw, 292px);
+    width: 132px !important;
+    opacity: 0.1;
+    transform: rotate(-1deg);
+    mix-blend-mode: multiply;
+}
+
+.parus-ticker {
+    position: relative;
+    isolation: isolate;
+}
+
+.parus-ticker::before {
+    content: '';
+    position: absolute;
+    z-index: 0;
+    top: 50%;
+    right: 0;
+    left: 0;
+    border-top: 1px dotted rgba(22, 59, 100, 0.2);
+    pointer-events: none;
+}
+
+.parus-ticker > div {
+    position: relative;
+    z-index: 1;
+}
+
+.parus-about-shell {
+    z-index: 1;
+    right: clamp(-46px, 0.5vw, 14px);
+    bottom: 28px;
+    width: clamp(150px, 14vw, 218px) !important;
+    opacity: 0.14;
+    transform: rotate(-8deg);
+    mix-blend-mode: multiply;
+}
+
+.parus-tracks-activities {
+    z-index: 0;
+    top: 26px;
+    right: clamp(20px, 4vw, 64px);
+    width: clamp(360px, 36vw, 520px) !important;
+    opacity: 0.16;
+    transform: rotate(-1deg);
+    mix-blend-mode: multiply;
+}
+
+.parus-team-flags {
+    z-index: 0;
+    top: 28px;
+    right: clamp(20px, 5vw, 72px);
+    width: clamp(190px, 19vw, 274px) !important;
+    opacity: 0.16;
+    transform: rotate(1.5deg);
+    mix-blend-mode: multiply;
+}
+
+.parus-gallery-paperboat {
+    z-index: 1;
+    right: clamp(12px, 3.5vw, 52px);
+    bottom: 26px;
+    width: clamp(118px, 12vw, 168px) !important;
+    opacity: 0.21;
+    transform: rotate(-4deg);
+    mix-blend-mode: multiply;
+}
+
+.parus-news-beacon {
+    z-index: 0;
+    top: 10px;
+    right: auto;
+    left: -7px;
+    width: clamp(144px, 13vw, 184px) !important;
+    opacity: 0.145;
+    transform: rotate(0.75deg);
+    mix-blend-mode: multiply;
+}
+
+.parus-docs-seal {
+    z-index: 1;
+    right: clamp(-22px, 1vw, 14px);
+    bottom: 8px;
+    width: clamp(150px, 14vw, 206px) !important;
+    opacity: 0.12;
+    transform: rotate(5deg);
+    mix-blend-mode: multiply;
+}
+
+.parus-cta-lifebuoy {
+    z-index: 0;
+    left: clamp(14px, 3vw, 46px);
+    bottom: -18px;
+    width: clamp(210px, 21vw, 294px) !important;
+    opacity: 0.15;
+    transform: rotate(-2deg);
+}
+
+.parus-footer-harbor {
+    z-index: 0;
+    top: 16px;
+    right: clamp(-24px, 1vw, 20px);
+    width: clamp(240px, 24vw, 344px) !important;
+    opacity: 0.14;
+    transform: rotate(1deg);
+}
+
+/* Координатные уголки делают фотографии частью одной навигационной карты. */
+.parus-team-photo-frame::before,
+.parus-team-photo-frame::after,
+.parus-news-photo-frame::before,
+.parus-news-photo-frame::after,
+.parus-gallery-card::after {
+    content: '';
+    position: absolute;
+    z-index: 3;
+    width: 28px;
+    height: 28px;
+    pointer-events: none;
+}
+
+.parus-team-photo-frame::before,
+.parus-news-photo-frame::before {
+    top: 0;
+    left: 0;
+    border-top: 4px solid var(--sun);
+    border-left: 4px solid var(--sun);
+}
+
+.parus-team-photo-frame::after,
+.parus-news-photo-frame::after,
+.parus-gallery-card::after {
+    right: 0;
+    bottom: 0;
+    border-right: 3px solid var(--accent);
+    border-bottom: 3px solid var(--accent);
+}
+
+.parus-gallery-card::after {
+    width: 22px;
+    height: 22px;
+}
+
+/* Тихий картографический слой: только в выбранных редакционных секциях. */
+.parus-chart-section {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+}
+
+.parus-chart-section::before {
+    content: '';
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    right: 0;
+    width: clamp(180px, 22vw, 320px);
+    height: clamp(130px, 17vw, 240px);
+    pointer-events: none;
+    opacity: 0.34;
+    background-image:
+        linear-gradient(rgba(22, 59, 100, 0.13) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(22, 59, 100, 0.13) 1px, transparent 1px),
+        radial-gradient(circle, rgba(200, 70, 46, 0.42) 0 1.5px, transparent 1.8px);
+    background-size: 28px 28px, 28px 28px, 56px 56px;
+    mask-image: linear-gradient(225deg, #000 0, rgba(0,0,0,.72) 38%, transparent 76%);
+}
+
+.parus-chart-section::after {
+    content: '·  ·  ' attr(data-chart-label);
+    position: absolute;
+    z-index: 1;
+    top: 24px;
+    right: clamp(20px, 5vw, 64px);
+    pointer-events: none;
+    color: var(--ink);
+    opacity: 0.46;
+    font: 500 9px/1 var(--font-mono);
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+}
+
+.parus-chart-section > div:first-of-type {
+    position: relative;
+    z-index: 2;
+}
+
+.parus-chart-section--prices::before,
+.parus-chart-section--gallery::before {
+    top: auto;
+    right: auto;
+    bottom: 0;
+    left: 0;
+    transform: rotate(180deg);
+}
+
+.parus-prices-decor {
+    z-index: 1;
+}
+
+.parus-features-compass,
+.parus-prices-decor,
+.parus-contact-map-decor,
+.parus-header-flags,
+.parus-about-shell,
+.parus-tracks-activities,
+.parus-team-flags,
+.parus-gallery-paperboat,
+.parus-news-beacon,
+.parus-docs-seal,
+.parus-cta-lifebuoy,
+.parus-footer-harbor {
+    pointer-events: none;
+    user-select: none;
+}
+
+.parus-cta-card,
+.parus-map-frame {
+    position: relative;
+}
+
+.parus-cta-card::before,
+.parus-map-frame::before,
+.parus-cta-card::after,
+.parus-map-frame::after {
+    content: '';
+    position: absolute;
+    z-index: 5;
+    width: 34px;
+    height: 34px;
+    pointer-events: none;
+}
+
+.parus-cta-card::before,
+.parus-map-frame::before {
+    top: -1px;
+    left: -1px;
+    border-top: 4px solid var(--sun);
+    border-left: 4px solid var(--sun);
+}
+
+.parus-cta-card::after,
+.parus-map-frame::after {
+    right: -1px;
+    bottom: -1px;
+    border-right: 3px solid var(--accent);
+    border-bottom: 3px solid var(--accent);
+}
+
+/* Метка секции */
+.section-tag {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 14px;
+    font: 500 12.5px/1 var(--font-sans);
+    color: var(--tx-soft);
+    letter-spacing: 0.01em;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+}
+
+.section-tag::after {
+    content: '';
+    width: 24px;
+    height: 4px;
+    margin-left: 2px;
+    background: var(--sun);
+    transform: translateY(-1px);
+}
+
+.section-tag b {
+    font: 500 12.5px/1 var(--font-mono);
+    color: var(--ink);
+    letter-spacing: 0.04em;
+}
+
+/* Крупный редакторский заголовок (не гигантский) */
+.display {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: clamp(36px, 4.6vw, 64px);
+    line-height: 1.06;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    text-wrap: balance;
+}
+
+.display em {
+    font-style: italic;
+    color: var(--accent);
+    font-family: var(--font-serif);
+}
+
+.serif-h2 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: clamp(26px, 3vw, 38px);
+    line-height: 1.14;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    text-wrap: balance;
+}
+
+.serif-h2 em {
+    font-style: italic;
+    color: var(--accent);
+    font-family: var(--font-serif);
+}
+
+.mono-caption {
+    font: 500 11.5px/1.35 var(--font-mono);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--tx-soft);
+}
+
+/* Кнопки. Состояния: Default / Hover / Active / Disabled (п. 8 ТЗ) */
+.btn-solid {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 48px;
+    padding: 14px 24px;
+    background: var(--ink);
+    color: var(--paper);
+    text-decoration: none;
+    font: 500 15px/1 var(--font-sans);
+    letter-spacing: 0.01em;
+    border: 1px solid var(--ink);
+    cursor: pointer;
+    transition: background 0.2s, transform 0.12s, box-shadow 0.2s;
+    border-radius: 0;
+}
+
+.btn-solid:hover {
+    background: var(--ink-2);
+    box-shadow: 0 8px 20px -14px rgba(11, 42, 70, 0.9);
+}
+
+.btn-solid:active {
+    background: var(--ink-deep);
+    transform: translateY(1px);
+    box-shadow: none;
+}
+
+.btn-solid.-coral {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #ffffff;
+}
+
+.btn-solid.-coral:hover {
+    background: var(--accent-2);
+    border-color: var(--accent-2);
+}
+
+.btn-solid.-coral:active {
+    background: #8f3020;
+    border-color: #8f3020;
+}
+
+.btn-line {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 48px;
+    padding: 13px 22px;
+    background: transparent;
+    color: var(--ink);
+    text-decoration: none;
+    font: 500 15px/1 var(--font-sans);
+    border: 1px solid var(--ink);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, transform 0.12s;
+    border-radius: 0;
+}
+
+.btn-line:hover {
+    background: var(--ink);
+    color: var(--paper);
+}
+
+.btn-line:active {
+    background: var(--ink-deep);
+    color: var(--paper);
+    transform: translateY(1px);
+}
+
+.btn-line.-dark {
+    color: var(--paper);
+    border-color: rgba(238, 241, 244, 0.5);
+}
+
+.btn-line.-dark:hover {
+    background: var(--paper);
+    color: var(--ink);
+}
+
+/* Disabled — однозначно читается как недоступное действие */
+.btn-solid[disabled],
+.btn-line[disabled],
+.btn-solid[aria-disabled='true'],
+.btn-line[aria-disabled='true'] {
+    background: var(--disabled-bg);
+    border-color: var(--disabled-bg);
+    color: var(--disabled-tx);
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+    pointer-events: none;
+}
+
+.btn-solid.-wide,
+.btn-line.-wide {
+    width: 100%;
+}
+
+.arrow-link {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 2px;
+    font: 500 14.5px/1 var(--font-sans);
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.arrow-link:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+:where(a, button, input, textarea, select):focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+}
+
+/* Motion */
+@keyframes riseUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: none; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes mq {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+}
+
+/* Кораблик покачивается на волне */
+@keyframes boatBob {
+    from { transform: translateY(0) rotate(-1.2deg); }
+    to { transform: translateY(-4px) rotate(1.2deg); }
+}
+
+@keyframes sunPulse {
+    from { opacity: 0.75; }
+    to { opacity: 1; }
+}
+
+@media (max-width: 640px) {
+    .parus-photo-caption {
+        grid-template-columns: 1fr;
+        gap: 5px;
+    }
+
+    .parus-preview-outro {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .parus-page-compass {
+        width: 78px !important;
+        right: 12px !important;
+        opacity: 0.1 !important;
+    }
+
+    .parus-chart-section::before {
+        width: 150px;
+        height: 112px;
+        opacity: 0.26;
+    }
+
+    .parus-chart-section::after {
+        top: 18px;
+        right: 20px;
+        font-size: 8px;
+    }
+
+    .parus-prices-decor {
+        top: 22px !important;
+        right: -78px !important;
+        width: 250px !important;
+        opacity: 0.09 !important;
+    }
+
+    .parus-contact-map-decor {
+        right: 10px !important;
+        bottom: 10px !important;
+        width: 96px !important;
+        opacity: 0.18 !important;
+    }
+
+    .parus-about-shell {
+        right: -32px;
+        bottom: 10px;
+        width: 116px !important;
+        opacity: 0.1;
+    }
+
+    .parus-tracks-activities {
+        top: 12px;
+        right: -92px;
+        width: 250px !important;
+        opacity: 0.1;
+    }
+
+    .parus-team-flags {
+        top: 12px;
+        right: -46px;
+        width: 154px !important;
+        opacity: 0.11;
+    }
+
+    .parus-gallery-paperboat {
+        right: -20px;
+        bottom: 8px;
+        width: 104px !important;
+        opacity: 0.15;
+    }
+
+    .parus-news-beacon {
+        top: 4px;
+        right: auto;
+        left: -8px;
+        width: 106px !important;
+        opacity: 0.105;
+    }
+
+    .parus-docs-seal {
+        right: -24px;
+        bottom: 2px;
+        width: 118px !important;
+        opacity: 0.09;
+    }
+
+    .parus-cta-lifebuoy {
+        left: -42px;
+        bottom: -10px;
+        width: 174px !important;
+        opacity: 0.11;
+    }
+
+    .parus-footer-harbor {
+        top: 12px;
+        right: -62px;
+        width: 198px !important;
+        opacity: 0.1;
+    }
+
+    .parus-team-photo-frame::before,
+    .parus-team-photo-frame::after,
+    .parus-news-photo-frame::before,
+    .parus-news-photo-frame::after {
+        width: 22px;
+        height: 22px;
+    }
+}
+
+@media (max-width: 1180px) {
+    .parus-header-flags {
+        display: none !important;
+    }
+}
+
+.parus-reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.parus-reveal.parus-reveal-in {
+    opacity: 1;
+    transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+    }
+    .parus-reveal {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+}
+
+/* ============================================================
+   UI KIT · компоненты и состояния (разделы 3, 4, 8 ТЗ)
+   Всё построено на 8-пиксельной сетке, mobile first.
+   ============================================================ */
+
+/* --- Каркас секций ------------------------------------------------- */
+.section {
+    padding: var(--section-y) var(--gutter);
+    border-top: 1px solid var(--ink);
+}
+
+.section.-plain {
+    border-top: 1px solid var(--line);
+}
+
+.shell {
+    max-width: var(--shell);
+    margin: 0 auto;
+}
+
+.stack-2 > * + * { margin-top: var(--s2); }
+.stack-3 > * + * { margin-top: var(--s3); }
+.stack-4 > * + * { margin-top: var(--s4); }
+
+/* Шапка секции: заголовок слева, действие справа */
+.parus-sec-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+@media (max-width: 899px) {
+    .parus-sec-head {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    /* На мобильной действие секции переезжает вниз и занимает всю ширину */
+    .parus-sec-head-btn { display: none; }
+    .parus-sec-foot-btn { width: 100%; }
+}
+
+@media (min-width: 900px) {
+    .parus-sec-foot-btn { display: none; }
+}
+
+/* --- Возрастной бейдж: Default / Active (п. 8 ТЗ) ------------------- */
+.age-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border: 2px solid var(--ink);
+    border-radius: 999px;
+    background: var(--sun);
+    color: #12263c;
+    font: 600 14px/1 var(--font-sans);
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s, transform 0.12s, box-shadow 0.18s;
+}
+
+.age-badge:hover {
+    background: var(--sun-deep);
+    box-shadow: 0 8px 18px -12px rgba(11, 42, 70, 0.8);
+}
+
+.age-badge:active {
+    transform: translateY(1px);
+}
+
+.age-badge[data-active='true'] {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: #ffffff;
+}
+
+/* Крупный бейдж первого экрана */
+.age-badge.-lg {
+    padding: 12px 24px;
+    font-size: 16px;
+}
+
+.age-badge.-lg small {
+    font: 400 12px/1 var(--font-sans);
+    opacity: 0.72;
+}
+
+/* Статичный бейдж внутри карточки (не кликабельный сам по себе) */
+.age-badge.-static {
+    cursor: default;
+    pointer-events: none;
+    border-width: 0;
+    padding: 6px 12px;
+    font-size: 13px;
+}
+
+/* --- Чипсы фильтров: Default / Selected / Disabled ------------------ */
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 8px 16px;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: var(--paper-3);
+    color: var(--tx);
+    font: 500 14px/1 var(--font-sans);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s, border-color 0.18s;
+}
+
+.chip:hover {
+    border-color: var(--ink);
+    background: #ffffff;
+}
+
+.chip[data-selected='true'] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #ffffff;
+}
+
+.chip[data-selected='true']:hover {
+    background: var(--accent-2);
+    border-color: var(--accent-2);
+}
+
+.chip[disabled] {
+    background: var(--disabled-bg);
+    border-color: var(--disabled-bg);
+    color: var(--disabled-tx);
+    cursor: not-allowed;
+}
+
+.chip i {
+    font-size: 16px;
+}
+
+/* Горизонтальный скролл чипсов на мобильных */
+.chip-row {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    margin-bottom: -8px;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+}
+
+.chip-row::-webkit-scrollbar { height: 4px; }
+.chip-row::-webkit-scrollbar-thumb { background: var(--line-strong); }
+
+@media (min-width: 900px) {
+    .chip-row {
+        flex-wrap: wrap;
+        overflow: visible;
+    }
+}
+
+/* --- Табы (вкладки документов): Active / Inactive ------------------- */
+.tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--line-strong);
+    overflow-x: auto;
+}
+
+.tab {
+    appearance: none;
+    border: none;
+    background: transparent;
+    padding: 14px 24px;
+    margin-bottom: -1px;
+    color: var(--tx-soft);
+    font: 500 15px/1 var(--font-sans);
+    white-space: nowrap;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: color 0.18s, border-color 0.18s, background 0.18s;
+}
+
+.tab:hover {
+    color: var(--ink);
+    background: rgba(22, 59, 100, 0.04);
+}
+
+.tab[aria-selected='true'] {
+    color: var(--ink);
+    border-bottom-color: var(--accent);
+    font-weight: 600;
+}
+
+/* --- Аккордеон: Свёрнут / Развёрнут --------------------------------- */
+.acc-item {
+    border-bottom: 1px solid var(--line);
+}
+
+.acc-head {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    padding: 16px 0;
+    background: transparent;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    color: var(--ink);
+    transition: color 0.18s;
+}
+
+.acc-head:hover { color: var(--accent); }
+
+.acc-icon {
+    flex: none;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--sun-wash);
+    color: var(--ink);
+    font-size: 20px;
+}
+
+.acc-toggle {
+    flex: none;
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--line-strong);
+    color: var(--ink);
+    font-size: 16px;
+    transition: transform 0.24s, background 0.18s;
+}
+
+.acc-head[aria-expanded='true'] .acc-toggle {
+    transform: rotate(180deg);
+    background: var(--sun);
+}
+
+.acc-panel {
+    padding: 0 0 20px 56px;
+}
+
+@media (max-width: 640px) {
+    .acc-panel { padding-left: 0; }
+}
+
+/* --- Поля ввода: Default / Focus / Error / Success ------------------ */
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.field-label {
+    font: 500 13px/1 var(--font-sans);
+    color: var(--ink);
+}
+
+.input {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 16px;
+    border: 1px solid var(--line-strong);
+    background: #ffffff;
+    color: var(--tx);
+    font: 400 15px/1.2 var(--font-sans);
+    border-radius: 0;
+    outline: none;
+    transition: border-color 0.18s, box-shadow 0.18s;
+}
+
+.input::placeholder { color: var(--tx-mute); }
+
+.input:focus {
+    border-color: var(--ink);
+    box-shadow: 0 0 0 3px rgba(22, 59, 100, 0.14);
+}
+
+.input[data-state='error'] {
+    border-color: var(--err);
+    background: var(--err-wash);
+}
+
+.input[data-state='error']:focus {
+    box-shadow: 0 0 0 3px rgba(200, 70, 46, 0.16);
+}
+
+.input[data-state='success'] {
+    border-color: var(--ok);
+    background: var(--ok-wash);
+}
+
+.input[disabled] {
+    background: var(--disabled-bg);
+    color: var(--disabled-tx);
+    cursor: not-allowed;
+}
+
+.field-msg {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font: 400 13px/1.4 var(--font-sans);
+}
+
+.field-msg.-error { color: var(--err); }
+.field-msg.-success { color: var(--ok); }
+
+/* --- Карточка кружка ------------------------------------------------ */
+.club-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--paper-3);
+    border: 1px solid var(--line);
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
+    transition: box-shadow 0.24s, transform 0.24s, border-color 0.24s;
+}
+
+.club-card:hover {
+    border-color: var(--ink);
+    box-shadow: 0 24px 40px -32px rgba(11, 42, 70, 0.7);
+    transform: translateY(-2px);
+}
+
+.club-card:hover .photo {
+    transform: scale(1.03);
+}
+
+.club-card__media {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: var(--mist);
+}
+
+.club-card__badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 2;
+}
+
+.club-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px 16px 8px;
+    flex: 1;
+}
+
+.club-card__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px;
+    border-top: 1px solid var(--line);
+}
+
+.club-price {
+    font: 600 20px/1 var(--font-sans);
+    color: var(--accent);
+    white-space: nowrap;
+}
+
+/* --- Медиа: загрузка, ошибка, разные пропорции (п. 3.1 ТЗ) ---------- */
+.media-box {
+    position: relative;
+    overflow: hidden;
+    background: var(--mist);
+}
+
+.media-box > img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.media-skeleton {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(100deg, var(--mist) 30%, var(--paper-2) 50%, var(--mist) 70%);
+    background-size: 220% 100%;
+    animation: shimmer 1.4s linear infinite;
+}
+
+.media-empty {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--mist);
+    color: var(--tx-mute);
+    font: 500 12px/1.4 var(--font-sans);
+    text-align: center;
+    padding: 16px;
+}
+
+.media-empty i { font-size: 32px; opacity: 0.6; }
+
+@keyframes shimmer {
+    from { background-position: 140% 0; }
+    to { background-position: -40% 0; }
+}
+
+/* --- Статус наличия мест -------------------------------------------- */
+.status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font: 500 12.5px/1.3 var(--font-sans);
+    white-space: nowrap;
+}
+
+.status.-ok { background: var(--ok-wash); color: var(--ok); }
+.status.-warn { background: var(--warn-wash); color: var(--warn); }
+.status.-off { background: var(--disabled-bg); color: var(--tx-mute); }
+
+/* --- Карусель с прокруткой (мобильная сетка кружков) ---------------- */
+.carousel {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(264px, 78%);
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 16px;
+    margin: 0 calc(-1 * var(--gutter));
+    padding-left: var(--gutter);
+    padding-right: var(--gutter);
+    -webkit-overflow-scrolling: touch;
+}
+
+.carousel > * {
+    scroll-snap-align: start;
+}
+
+@media (min-width: 900px) {
+    .carousel {
+        grid-auto-flow: row;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        grid-auto-columns: auto;
+        overflow: visible;
+        margin: 0;
+        padding: 0;
+        gap: 24px;
+    }
+}
+
+/* --- Липкая панель CTA на мобильной детальной странице -------------- */
+.sticky-cta {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 70;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+    padding: 8px 16px calc(8px + env(safe-area-inset-bottom));
+    background: var(--paper);
+    border-top: 1px solid var(--ink);
+    box-shadow: 0 -12px 28px -24px rgba(11, 42, 70, 0.9);
+}
+
+@media (min-width: 900px) {
+    .sticky-cta { display: none; }
+}
+
+/* --- Таблица расписания --------------------------------------------- */
+.sched {
+    width: 100%;
+    border-collapse: collapse;
+    font: 400 15px/1.4 var(--font-sans);
+}
+
+.sched th {
+    text-align: left;
+    padding: 8px 16px 8px 0;
+    border-bottom: 1px solid var(--ink);
+    font: 500 12px/1.3 var(--font-mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--tx-soft);
+    white-space: nowrap;
+}
+
+.sched td {
+    padding: 16px 16px 16px 0;
+    border-bottom: 1px solid var(--line);
+    vertical-align: middle;
+}
+
+.sched td:last-child,
+.sched th:last-child { padding-right: 0; }
+
+@media (max-width: 640px) {
+    .sched, .sched tbody, .sched tr, .sched td { display: block; width: 100%; }
+    .sched thead { display: none; }
+    .sched tr {
+        padding: 16px 0;
+        border-bottom: 1px solid var(--line);
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 8px;
+    }
+    .sched td { border: none; padding: 0; }
+    .sched td[data-col='status'] { grid-column: 1 / -1; }
+}
+
+/* --- Пустое состояние каталога --------------------------------------- */
+.empty-state {
+    padding: 48px 24px;
+    border: 1px dashed var(--line-strong);
+    text-align: center;
+    color: var(--tx-soft);
+}
+
+/* --- Мессенджеры ----------------------------------------------------- */
+.msg-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border: 1px solid var(--line-strong);
+    color: var(--ink);
+    font-size: 22px;
+    text-decoration: none;
+    transition: background 0.18s, color 0.18s, border-color 0.18s;
+}
+
+.msg-btn:hover {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+}
+
+.msg-btn.-wa:hover { background: #25d366; border-color: #25d366; color: #fff; }
+.msg-btn.-tg:hover { background: #29a9eb; border-color: #29a9eb; color: #fff; }
+
+/* --- Ссылки в подвале ------------------------------------------------ */
+.foot-link {
+    color: rgba(var(--cream-rgb), 0.78);
+    text-decoration: none;
+    font: 400 15px/1.4 var(--font-sans);
+    border-bottom: 1px solid transparent;
+    transition: color 0.18s, border-color 0.18s;
+}
+
+.foot-link:hover {
+    color: var(--paper);
+    border-bottom-color: rgba(var(--cream-rgb), 0.45);
+}
+
+/* Скрыть визуально, оставив для скринридеров */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+}
